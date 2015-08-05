@@ -26,9 +26,12 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
+from __future__ import print_function
 import argparse
+import datetime
 import os
+import re
+import sys
 
 # Name of the plugin (shell wrapper script)
 PLUGIN_NAME = "agenda"
@@ -39,12 +42,65 @@ def usage(args):
     print("      Non-scheduled tasks are printed under the current date")
 
 
+def getthreshold(line, defaultdate):
+    '''Parses line and returns threshold ("t:") date object
+    python date objects are comparable to each other
+    If the date cannot be parsed (because the format does not match or
+    threshold date is not available) the current date is returned.
+    '''
+    pattern = " t:(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})"
+    result = re.search(pattern, line)
+    if result != None:
+        return datetime.date(int(result.group("year")),
+                int(result.group("month")),
+                int(result.group("day")))
+    else:
+        return defaultdate
+
+
+
 def plugin(args):
     '''Plugin main logic'''
-    print "@TODO: Implement logic"
-    print( "TODOTXT_PLAIN: " +  os.environ.get("TODOTXT_PLAIN"))
-    print( "TODO_DIR: " + os.environ.get("TODO_DIR"))
+
+    todo_dir = os.environ.get("TODO_DIR")
+    if todo_dir == None:
+        print("Env variable TODO_DIR not set! Exit.", file=sys.stderr)
+        sys.exit(1)
+
+    todo_filename = os.path.join(todo_dir, "todo.txt")
+
+    if not os.path.isfile(todo_filename):
+        print("todo.txt not found in TODO_DIR! Exit.", file=sys.stderr)
+        sys.exit(1)
+
+    now = datetime.date.today()
+    agenda_data = {}
+    todo_file = open(todo_filename, "r")
+    line_nr = 1
+    for line in todo_file:
+        line = line.rstrip()
+        # Skip over empty lines
+        if len(line) > 0:
+            threshold = getthreshold(line, now)
+            if not threshold in agenda_data:
+                agenda_data[threshold] = []
+            agenda_data[threshold].append(line)
+        line_nr = line_nr + 1
+
+    for key in agenda_data:
+        agenda_data[key].sort()
     
+    for key in sorted(agenda_data):
+        datestring = key.strftime("%a, %Y-%m-%d")
+        print(datestring)
+        print("-" * len(datestring))
+        print()
+        for entry in agenda_data[key]:
+            print(entry)
+        print()
+        print()
+
+
 
 def main():
     '''main function'''
