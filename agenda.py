@@ -39,7 +39,8 @@ PLUGIN_NAME = "agenda"
 
 def usage(args):
     '''Usage message for todo.sh plugin system'''
-    print("    " + PLUGIN_NAME + ": " + "Prints overview of scheduled ('t:') task for next 10 days")
+    print("    " + PLUGIN_NAME + ": " +
+            "Prints overview of scheduled ('t:') task for next 10 days")
     print("      Non-scheduled tasks are printed under the current date")
 
 
@@ -143,9 +144,11 @@ def main():
     '''main function'''
     parser = argparse.ArgumentParser(prog=PLUGIN_NAME)
     subparsers = parser.add_subparsers()
-    parser_usage = subparsers.add_parser('usage', help='show usage message')
+    parser_usage = subparsers.add_parser('usage',
+            help='show usage message')
     parser_usage.set_defaults(func=usage)
-    parser_plugin = subparsers.add_parser(PLUGIN_NAME, help='plugin main command')
+    parser_plugin = subparsers.add_parser(PLUGIN_NAME,
+            help='plugin main command')
     parser_plugin.set_defaults(func=plugin)
     args = parser.parse_args()
     args.func(args)
