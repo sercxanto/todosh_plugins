@@ -108,6 +108,17 @@ def print_long(agenda_data):
         print()
         print()
 
+def print_short(agenda_data):
+    '''Short print format'''
+    for key in sorted(agenda_data):
+        datestring = key.strftime("%a, %Y-%m-%d")
+        print(datestring + ":")
+        item_list = sorted(agenda_data[key], key=operator.itemgetter('line'))
+
+        for entry in item_list:
+            print("  %02d %s" % (entry["nr"], entry["line"]))
+        print()
+
 
 def plugin(args):
     '''Plugin main logic'''
@@ -125,7 +136,7 @@ def plugin(args):
 
     now = datetime.date.today()
     agenda_data = readtodotxt(todo_filename, now)
-    print_long(agenda_data)
+    print_short(agenda_data)
 
 
 def main():
