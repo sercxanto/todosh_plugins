@@ -86,6 +86,7 @@ def plugin(args):
                 agenda_data[threshold] = []
             agenda_data[threshold].append(line)
         line_nr = line_nr + 1
+    todo_file.close()
 
     for key in agenda_data:
         agenda_data[key].sort()
