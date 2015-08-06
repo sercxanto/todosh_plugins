@@ -29,6 +29,7 @@
 from __future__ import print_function
 import argparse
 import datetime
+import operator
 import os
 import re
 import sys
@@ -62,12 +63,13 @@ def readtodotxt(todo_filename, now):
     '''Reads the todo.txt file and returns the following dict (example):
 
         { 2015-01-01:
-            ["(A) Task1", "(B) Task2", "Task3"],
+            [ { "line": "(B) Task1", "nr": 5 }, { "line": "(A) Task2", "nr": 4 }, { "line": "Task3", "nr": 1 } ],
           2015-01-02:
-            ["(A) Task4", "(B) Task5", "Task6"]
+            [ { "line": "Task4", "nr": 3} , {"line": "(C) Task5", "nr": 2}, {"line": "(A) Task6", "nr": 6 } ]
         }
 
-    The date is a datetime.date object
+        - The date is a datetime.date object
+        - The numbers are line numbers
 
     Parameters:
         now: datetime.timestamp considered to be "now"
@@ -82,15 +84,29 @@ def readtodotxt(todo_filename, now):
             threshold = getthreshold(line, now)
             if not threshold in agenda_data:
                 agenda_data[threshold] = []
-            agenda_data[threshold].append(line)
+            item = {}
+            item["line"] = line
+            item["nr"] = line_nr
+            agenda_data[threshold].append(item)
         line_nr = line_nr + 1
     todo_file.close()
 
-    for key in agenda_data:
-        agenda_data[key].sort()
-
     return agenda_data
 
+
+def print_long(agenda_data):
+    '''Long print format'''
+    for key in sorted(agenda_data):
+        datestring = key.strftime("%a, %Y-%m-%d")
+        print(datestring)
+        print("-" * len(datestring))
+        print()
+        item_list = sorted(agenda_data[key], key=operator.itemgetter('line'))
+
+        for entry in item_list:
+            print("%02d %s" % (entry["nr"], entry["line"]))
+        print()
+        print()
 
 
 def plugin(args):
@@ -109,17 +125,7 @@ def plugin(args):
 
     now = datetime.date.today()
     agenda_data = readtodotxt(todo_filename, now)
-    
-    for key in sorted(agenda_data):
-        datestring = key.strftime("%a, %Y-%m-%d")
-        print(datestring)
-        print("-" * len(datestring))
-        print()
-        for entry in agenda_data[key]:
-            print(entry)
-        print()
-        print()
-
+    print_long(agenda_data)
 
 
 def main():
