@@ -58,22 +58,20 @@ def getthreshold(line, defaultdate):
         return defaultdate
 
 
+def readtodotxt(todo_filename, now):
+    '''Reads the todo.txt file and returns the following dict (example):
 
-def plugin(args):
-    '''Plugin main logic'''
+        { 2015-01-01:
+            ["(A) Task1", "(B) Task2", "Task3"],
+          2015-01-02:
+            ["(A) Task4", "(B) Task5", "Task6"]
+        }
 
-    todo_dir = os.environ.get("TODO_DIR")
-    if todo_dir == None:
-        print("Env variable TODO_DIR not set! Exit.", file=sys.stderr)
-        sys.exit(1)
+    The date is a datetime.date object
 
-    todo_filename = os.path.join(todo_dir, "todo.txt")
-
-    if not os.path.isfile(todo_filename):
-        print("todo.txt not found in TODO_DIR! Exit.", file=sys.stderr)
-        sys.exit(1)
-
-    now = datetime.date.today()
+    Parameters:
+        now: datetime.timestamp considered to be "now"
+    '''
     agenda_data = {}
     todo_file = open(todo_filename, "r")
     line_nr = 1
@@ -90,6 +88,27 @@ def plugin(args):
 
     for key in agenda_data:
         agenda_data[key].sort()
+
+    return agenda_data
+
+
+
+def plugin(args):
+    '''Plugin main logic'''
+
+    todo_dir = os.environ.get("TODO_DIR")
+    if todo_dir == None:
+        print("Env variable TODO_DIR not set! Exit.", file=sys.stderr)
+        sys.exit(1)
+
+    todo_filename = os.path.join(todo_dir, "todo.txt")
+
+    if not os.path.isfile(todo_filename):
+        print("todo.txt not found in TODO_DIR! Exit.", file=sys.stderr)
+        sys.exit(1)
+
+    now = datetime.date.today()
+    agenda_data = readtodotxt(todo_filename, now)
     
     for key in sorted(agenda_data):
         datestring = key.strftime("%a, %Y-%m-%d")
