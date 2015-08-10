@@ -87,7 +87,10 @@ def plugin(args):
         sys.exit(1)
 
     now = datetime.date.today()
-    agenda_data = libtodotxt.readtodotxt(todo_filename, now)
+    agenda_data = libtodotxt.readtodotxt(todo_filename)
+
+    # Handle items with no threshold date as due now
+    libtodotxt.add_threshold_to_empty(agenda_data, now)
     print_short(agenda_data)
 
 

@@ -11,6 +11,18 @@ def move_lines(from_file, to_file, line_nrs):
     pass
 
 
+def add_threshold_to_empty(agenda_data, threshold):
+    '''
+    Adds the given threshold value (datetime.date object) to entries with no
+    threshold (key is None).
+    '''
+    if None in agenda_data:
+        if threshold not in agenda_data:
+            agenda_data[threshold] = []
+        agenda_data[threshold].extend(agenda_data[None])
+        del agenda_data[None]
+
+
 def get_threshold_line_nr(agenda_data, now, nr_of_days):
     '''Returns a list of line_numbers of filtered agenda_data
     contains tasks either overdue or due in next nr_of_days days
@@ -25,11 +37,11 @@ def get_threshold_line_nr(agenda_data, now, nr_of_days):
     return result
 
 
-def getthreshold(line, defaultdate):
+def getthreshold(line):
     '''Parses line and returns threshold ("t:") date object
     python date objects are comparable to each other
     If the date cannot be parsed (because the format does not match or
-    threshold date is not available) the current date is returned.
+    threshold date is not available) None is returned.
     '''
     pattern = " t:(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})"
     result = re.search(pattern, line)
@@ -38,10 +50,10 @@ def getthreshold(line, defaultdate):
                 int(result.group("month")),
                 int(result.group("day")))
     else:
-        return defaultdate
+        return None
 
 
-def readtodotxt(todo_filename, now):
+def readtodotxt(todo_filename):
     '''Reads the todo.txt file and returns the following dict (example):
 
         { 2015-01-01:
@@ -53,8 +65,6 @@ def readtodotxt(todo_filename, now):
         - The date is a datetime.date object
         - The numbers are line numbers
 
-    Parameters:
-        now: datetime.timestamp considered to be "now"
     '''
     agenda_data = {}
     todo_file = open(todo_filename, "r")
@@ -63,7 +73,7 @@ def readtodotxt(todo_filename, now):
         line = line.rstrip()
         # Skip over empty lines
         if len(line) > 0:
-            threshold = getthreshold(line, now)
+            threshold = getthreshold(line)
             if not threshold in agenda_data:
                 agenda_data[threshold] = []
             item = {}
