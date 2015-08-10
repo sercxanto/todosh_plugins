@@ -3,6 +3,20 @@ import datetime
 import re
 
 
+def get_threshold_line_nr(agenda_data, now, nr_of_days):
+    '''Returns a list of line_numbers of filtered agenda_data
+    contains tasks either overdue or due in next nr_of_days days
+    '''
+    limit = now + datetime.timedelta(days=nr_of_days)
+    result = []
+    for date in agenda_data:
+        print(date)
+        if date <= limit:
+            for entry in agenda_data[date]:
+                result.append(entry["nr"])
+    return result
+
+
 def getthreshold(line, defaultdate):
     '''Parses line and returns threshold ("t:") date object
     python date objects are comparable to each other

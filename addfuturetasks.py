@@ -44,20 +44,6 @@ def usage(args):
     print("      Non-scheduled tasks will be added as is.")
 
 
-def get_threshold_line_nr(agenda_data, now, nr_of_days):
-    '''Returns the line_nr of filtered agenda_data
-    contains tasks either overdue or due in next nr_of_days days
-    '''
-    limit = now + datetime.timedelta(days=nr_of_days)
-    result = []
-    for date in agenda_data:
-        print(date)
-        if date <= limit:
-            for entry in agenda_data[date]:
-                result.append(entry["nr"])
-    return result
-
-
 def plugin(args):
     '''Plugin main logic'''
 
@@ -75,7 +61,7 @@ def plugin(args):
     now = datetime.date.today()
     agenda_data = libtodotxt.readtodotxt(future_filename, now)
 
-    lines_to_copy = get_threshold_line_nr(agenda_data, now, 10)
+    lines_to_copy = libtodotxt.get_threshold_line_nr(agenda_data, now, 10)
     print(lines_to_copy)
 
 
