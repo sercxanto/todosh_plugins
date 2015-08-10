@@ -3,6 +3,14 @@ import datetime
 import re
 
 
+def move_lines(from_file, to_file, line_nrs):
+    '''
+    Copies the lines referenced in the list line_nrs from from_file to
+    to_file and deletes the lines in from_file'''
+    # TODO implement
+    pass
+
+
 def get_threshold_line_nr(agenda_data, now, nr_of_days):
     '''Returns a list of line_numbers of filtered agenda_data
     contains tasks either overdue or due in next nr_of_days days
