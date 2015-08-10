@@ -121,9 +121,75 @@ class TestGetThresholdLineNr(unittest.TestCase):
         self.testdir = os.path.join(scriptDir, "testfiles")
 
     def test_01(self):
-        pass
+        '''nr_of_day=1'''
+        now = datetime.date(2014,12,31)
+        agenda_data = libtodotxt.readtodotxt(
+            os.path.join(self.testdir, "todo05.txt"))
+        actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 1)
+        expected = [1, 4]
+        self.assertItemsEqual(expected, actual)
 
+    def test_02(self):
+        '''nr_of_day=2'''
+        now = datetime.date(2014,12,31)
+        agenda_data = libtodotxt.readtodotxt(
+            os.path.join(self.testdir, "todo05.txt"))
+        actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 2)
+        expected = [1, 4, 3]
+        self.assertItemsEqual(expected, actual)
 
+    def test_03(self):
+        '''nr_of_day=3'''
+        now = datetime.date(2014,12,31)
+        agenda_data = libtodotxt.readtodotxt(
+            os.path.join(self.testdir, "todo05.txt"))
+        actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 3)
+        expected = [1, 4, 3, 2]
+        self.assertItemsEqual(expected, actual)
+
+    def test_04(self):
+        '''threshold in future'''
+        now = datetime.date(2014,12,28)
+        agenda_data = libtodotxt.readtodotxt(
+            os.path.join(self.testdir, "todo05.txt"))
+        actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 1)
+        self.assertTrue(len(actual) == 0)
+
+    def test_05(self):
+        '''another now date, 1 matches'''
+        now = datetime.date(2014,12,29)
+        agenda_data = libtodotxt.readtodotxt(
+            os.path.join(self.testdir, "todo05.txt"))
+        actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 2)
+        expected = [4]
+        self.assertItemsEqual(expected, actual)
+
+    def test_06(self):
+        '''date in between threshold entries'''
+        now = datetime.date(2015,01,02)
+        agenda_data = libtodotxt.readtodotxt(
+            os.path.join(self.testdir, "todo05.txt"))
+        actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 10)
+        expected = [1, 2, 3, 4]
+        self.assertItemsEqual(expected, actual)
+
+    def test_07(self):
+        '''date at end of threshold entries'''
+        now = datetime.date(2015,01,03)
+        agenda_data = libtodotxt.readtodotxt(
+            os.path.join(self.testdir, "todo05.txt"))
+        actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 10)
+        expected = [1, 2, 3, 4]
+        self.assertItemsEqual(expected, actual)
+
+    def test_08(self):
+        '''date in future'''
+        now = datetime.date(2015,01,15)
+        agenda_data = libtodotxt.readtodotxt(
+            os.path.join(self.testdir, "todo05.txt"))
+        actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 10)
+        expected = [1, 2, 3, 4]
+        self.assertItemsEqual(expected, actual)
 
 
 if __name__ == '__main__':

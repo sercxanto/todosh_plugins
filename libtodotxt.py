@@ -30,7 +30,6 @@ def get_threshold_line_nr(agenda_data, now, nr_of_days):
     limit = now + datetime.timedelta(days=nr_of_days)
     result = []
     for date in agenda_data:
-        print(date)
         if date <= limit:
             for entry in agenda_data[date]:
                 result.append(entry["nr"])
