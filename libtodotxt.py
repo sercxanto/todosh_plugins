@@ -6,7 +6,7 @@ import re
 def move_lines(from_file, to_file, line_nrs):
     '''
     Copies the lines referenced in the list line_nrs from from_file to
-    to_file and deletes the lines in from_file'''
+    to_file and deletes empty lines in from_file'''
     # TODO implement
     pass
 

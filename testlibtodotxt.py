@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
 import datetime
+import filecmp
 import os
 import unittest
+import shutil
+import tempfile
 import libtodotxt
 
 
@@ -200,6 +203,45 @@ class TestGetThresholdLineNr(unittest.TestCase):
         actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 10)
         expected = [1, 2, 3, 4]
         self.assertItemsEqual(expected, actual)
+
+
+class TestMoveLines(unittest.TestCase):
+    def setUp(self):
+        scriptDir = os.path.dirname(__file__)
+        self.testdir = os.path.join(scriptDir, "testfiles")
+
+    def startTestcase(self, testcase):
+        '''Runs a testcase from the folder testfile/move_lines'''
+        dirname = os.path.join(self.testdir, "move_lines", testcase)
+        lines_filename = os.path.join(dirname, "lines.txt")
+        from_before_filename = os.path.join(dirname, "from_before.txt")
+        from_after_filename = os.path.join(dirname, "from_after.txt")
+        to_before_filename = os.path.join(dirname, "to_before.txt")
+        to_after_filename = os.path.join(dirname, "to_after.txt")
+
+        line_nrs = []
+        with open(lines_filename) as file_:
+            for line in file_:
+                line_nrs.append(int(line))
+    
+        temp_dir = tempfile.mkdtemp(prefix="tmp_testlibtodotxt")
+        print temp_dir
+
+        from_filename = os.path.join(temp_dir, "from.txt")
+        to_filename = os.path.join(temp_dir, "to.txt")
+        shutil.copyfile(from_before_filename, from_filename)
+        shutil.copyfile(to_before_filename, to_filename)
+
+        libtodotxt.move_lines(from_filename, to_filename, line_nrs)
+        self.assertTrue(filecmp.cmp(from_filename, from_after_filename, shallow=False))
+        self.assertTrue(filecmp.cmp(to_filename, to_after_filename, shallow=False))
+
+        shutil.rmtree(temp_dir)
+
+    def test_01(self):
+        '''Simple move'''
+        self.startTestcase("01")
+
 
 if __name__ == '__main__':
     unittest.main()
