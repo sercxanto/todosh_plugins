@@ -6,7 +6,7 @@ import unittest
 import libtodotxt
 
 
-def testAgendaDataEqual(dict1, dict2):
+def checkAgendaDataEqual(dict1, dict2):
     '''Tests if two agenda dicts contains the same entries, independend of the
     order.
     Returns True if dicts are equal, False otherwise
@@ -41,7 +41,7 @@ class TestReadTodoTxt(unittest.TestCase):
 
         os.path.join(self.testdir, "todo01.txt"), now)
         expected = {now: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task2", "nr": 2 }, { "line": "Task4", "nr": 5 }]}
-        self.assertTrue(testAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
     def test_02(self):
         '''Simple todo.txt with one "t:"'''
@@ -50,7 +50,7 @@ class TestReadTodoTxt(unittest.TestCase):
 
         os.path.join(self.testdir, "todo02.txt"), now)
         expected = {now: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task2 t:2015-01-01", "nr": 2 }, { "line": "Task4", "nr": 5 }]}
-        self.assertTrue(testAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
     def test_03(self):
         '''Simple todo.txt with two "t:", one in the past'''
@@ -60,7 +60,7 @@ class TestReadTodoTxt(unittest.TestCase):
 
         os.path.join(self.testdir, "todo03.txt"), now)
         expected = {earlier: [ {"line": "Task5 t:2014-12-31", "nr":7 }], now: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task2 t:2015-01-01", "nr": 2 }, { "line": "Task4", "nr": 5 }]}
-        self.assertTrue(testAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
     def test_04(self):
         '''Date which cannot be parsed'''
@@ -69,7 +69,7 @@ class TestReadTodoTxt(unittest.TestCase):
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo04.txt"), now)
         expected = {earlier: [ {"line": "Task5 t:2014-12-31", "nr":7 }], now: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task2 t:2015-01-01", "nr": 2 }, { "line": "Task4 t:abc", "nr": 5 }, {"line": "Task6 t:", "nr": 9}]}
-        self.assertTrue(testAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
 if __name__ == '__main__':
     unittest.main()
