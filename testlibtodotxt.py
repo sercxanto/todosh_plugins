@@ -29,6 +29,45 @@ def checkAgendaDataEqual(dict1, dict2):
     return True
 
 
+class TestReadTodoTxt(unittest.TestCase):
+    def setUp(self):
+        scriptDir = os.path.dirname(__file__)
+        self.testdir = os.path.join(scriptDir, "testfiles")
+
+    def test_01(self):
+        '''Simple todo.txt'''
+        agenda_data = libtodotxt.readtodotxt(
+
+        os.path.join(self.testdir, "todo01.txt"))
+        expected = {None: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task2", "nr": 2 }, { "line": "Task4", "nr": 5 }]}
+        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+
+    def test_02(self):
+        '''Simple todo.txt with one "t:"'''
+        agenda_data = libtodotxt.readtodotxt(
+
+        os.path.join(self.testdir, "todo02.txt"))
+        expected = {None: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task4", "nr": 5 }], datetime.date(2015,01,01): [{ "line": "Task2 t:2015-01-01", "nr": 2 } ]}
+        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+
+    def test_03(self):
+        '''Simple todo.txt with two "t:", one in the past'''
+        agenda_data = libtodotxt.readtodotxt(
+                os.path.join(self.testdir, "todo03.txt"))
+
+        expected = {None: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task4", "nr": 5 }], datetime.date(2015,01,01): [{ "line": "Task2 t:2015-01-01", "nr": 2 } ], datetime.date(2014,12,31): [{"line": "Task5 t:2014-12-31", "nr": 7}]}
+        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+
+    def test_04(self):
+        '''Date which cannot be parsed'''
+        now = datetime.date(2015,01,01)
+        earlier = datetime.date(2014,12,31)
+        agenda_data = libtodotxt.readtodotxt(
+            os.path.join(self.testdir, "todo04.txt"))
+        expected = {None: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task4 t:abc", "nr": 5 }, {"line": "Task6 t:", "nr":9}], datetime.date(2015,01,01): [{ "line": "Task2 t:2015-01-01", "nr": 2 } ], datetime.date(2014,12,31): [{"line": "Task5 t:2014-12-31", "nr": 7}]}
+        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+
+
 class TestAddThresholdToEmpty(unittest.TestCase):
     def setUp(self):
         scriptDir = os.path.dirname(__file__)
