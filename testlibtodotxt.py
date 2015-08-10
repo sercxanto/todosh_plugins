@@ -42,7 +42,11 @@ class TestReadTodoTxt(unittest.TestCase):
         agenda_data = libtodotxt.readtodotxt(
 
         os.path.join(self.testdir, "todo01.txt"))
-        expected = {None: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task2", "nr": 2 }, { "line": "Task4", "nr": 5 }]}
+        expected = {None: [
+            { "line": "Task1", "nr": 1  },
+            { "line": "Task3", "nr": 3},
+            { "line": "Task2", "nr": 2 },
+            { "line": "Task4", "nr": 5 }]}
         self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
     def test_02(self):
@@ -50,7 +54,13 @@ class TestReadTodoTxt(unittest.TestCase):
         agenda_data = libtodotxt.readtodotxt(
 
         os.path.join(self.testdir, "todo02.txt"))
-        expected = {None: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task4", "nr": 5 }], datetime.date(2015,01,01): [{ "line": "Task2 t:2015-01-01", "nr": 2 } ]}
+        expected = {
+                None: [
+                    { "line": "Task1", "nr": 1 },
+                    { "line": "Task3", "nr": 3},
+                    { "line": "Task4", "nr": 5 }],
+                datetime.date(2015,01,01): [
+                    { "line": "Task2 t:2015-01-01", "nr": 2 } ]}
         self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
     def test_03(self):
@@ -58,7 +68,15 @@ class TestReadTodoTxt(unittest.TestCase):
         agenda_data = libtodotxt.readtodotxt(
                 os.path.join(self.testdir, "todo03.txt"))
 
-        expected = {None: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task4", "nr": 5 }], datetime.date(2015,01,01): [{ "line": "Task2 t:2015-01-01", "nr": 2 } ], datetime.date(2014,12,31): [{"line": "Task5 t:2014-12-31", "nr": 7}]}
+        expected = {
+                    None: [
+                        { "line": "Task1", "nr": 1  },
+                        { "line": "Task3", "nr": 3},
+                        { "line": "Task4", "nr": 5 }],
+                    datetime.date(2015,01,01): [
+                        { "line": "Task2 t:2015-01-01", "nr": 2 } ],
+                    datetime.date(2014,12,31): [
+                        {"line": "Task5 t:2014-12-31", "nr": 7}]}
         self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
     def test_04(self):
@@ -67,7 +85,16 @@ class TestReadTodoTxt(unittest.TestCase):
         earlier = datetime.date(2014,12,31)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo04.txt"))
-        expected = {None: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task4 t:abc", "nr": 5 }, {"line": "Task6 t:", "nr":9}], datetime.date(2015,01,01): [{ "line": "Task2 t:2015-01-01", "nr": 2 } ], datetime.date(2014,12,31): [{"line": "Task5 t:2014-12-31", "nr": 7}]}
+        expected = {
+                    None: [
+                        { "line": "Task1", "nr": 1 },
+                        { "line": "Task3", "nr": 3 },
+                        { "line": "Task4 t:abc", "nr": 5 }
+                        , {"line": "Task6 t:", "nr":9}],
+                    datetime.date(2015,01,01): [
+                        { "line": "Task2 t:2015-01-01", "nr": 2 } ],
+                    datetime.date(2014,12,31): [
+                        {"line": "Task5 t:2014-12-31", "nr": 7}]}
         self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
 
@@ -83,7 +110,12 @@ class TestAddThresholdToEmpty(unittest.TestCase):
 
         os.path.join(self.testdir, "todo01.txt"))
         libtodotxt.add_threshold_to_empty(agenda_data, now)
-        expected = {now: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task2", "nr": 2 }, { "line": "Task4", "nr": 5 }]}
+        expected = {
+                    now: [
+                        { "line": "Task1", "nr": 1  },
+                        { "line": "Task3", "nr": 3 },
+                        { "line": "Task2", "nr": 2 },
+                        { "line": "Task4", "nr": 5 }]}
         self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
     def test_02(self):
@@ -93,7 +125,12 @@ class TestAddThresholdToEmpty(unittest.TestCase):
 
         os.path.join(self.testdir, "todo02.txt"))
         libtodotxt.add_threshold_to_empty(agenda_data, now)
-        expected = {now: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task2 t:2015-01-01", "nr": 2 }, { "line": "Task4", "nr": 5 }]}
+        expected = {
+                    now: [
+                        { "line": "Task1", "nr": 1 },
+                        { "line": "Task3", "nr": 3},
+                        { "line": "Task2 t:2015-01-01", "nr": 2 },
+                        { "line": "Task4", "nr": 5 }]}
         self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
     def test_03(self):
@@ -104,7 +141,14 @@ class TestAddThresholdToEmpty(unittest.TestCase):
 
         os.path.join(self.testdir, "todo03.txt"))
         libtodotxt.add_threshold_to_empty(agenda_data, now)
-        expected = {earlier: [ {"line": "Task5 t:2014-12-31", "nr":7 }], now: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task2 t:2015-01-01", "nr": 2 }, { "line": "Task4", "nr": 5 }]}
+        expected = {
+                earlier: [
+                    {"line": "Task5 t:2014-12-31", "nr":7 }],
+                now: [
+                    { "line": "Task1", "nr": 1  },
+                    { "line": "Task3", "nr": 3},
+                    { "line": "Task2 t:2015-01-01", "nr": 2 },
+                    { "line": "Task4", "nr": 5 }]}
         self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
     def test_04(self):
@@ -114,7 +158,15 @@ class TestAddThresholdToEmpty(unittest.TestCase):
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo04.txt"))
         libtodotxt.add_threshold_to_empty(agenda_data, now)
-        expected = {earlier: [ {"line": "Task5 t:2014-12-31", "nr":7 }], now: [ { "line": "Task1", "nr": 1  }, { "line": "Task3", "nr": 3}, { "line": "Task2 t:2015-01-01", "nr": 2 }, { "line": "Task4 t:abc", "nr": 5 }, {"line": "Task6 t:", "nr": 9}]}
+        expected = {
+                earlier: [
+                    {"line": "Task5 t:2014-12-31", "nr":7 }],
+                now: [
+                    { "line": "Task1", "nr": 1  },
+                    { "line": "Task3", "nr": 3 },
+                    { "line": "Task2 t:2015-01-01", "nr": 2 },
+                    { "line": "Task4 t:abc", "nr": 5 },
+                    {"line": "Task6 t:", "nr": 9}]}
         self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
 
 
@@ -233,14 +285,16 @@ class TestMoveLines(unittest.TestCase):
         shutil.copyfile(to_before_filename, to_filename)
 
         libtodotxt.move_lines(from_filename, to_filename, line_nrs)
-        self.assertTrue(filecmp.cmp(from_filename, from_after_filename, shallow=False))
-        self.assertTrue(filecmp.cmp(to_filename, to_after_filename, shallow=False))
+        self.assertTrue(filecmp.cmp(
+            from_filename, from_after_filename, shallow=False))
+        self.assertTrue(filecmp.cmp(
+            to_filename, to_after_filename, shallow=False))
 
         shutil.rmtree(temp_dir)
 
     def test_01(self):
         '''Simple move'''
-        self.startTestcase("01")
+        #self.startTestcase("01")
 
 
 if __name__ == '__main__':
