@@ -191,6 +191,15 @@ class TestGetThresholdLineNr(unittest.TestCase):
         expected = [1, 2, 3, 4]
         self.assertItemsEqual(expected, actual)
 
+    def test_09(self):
+        '''Ommited threshold'''
+        now = datetime.date(2015,01,01)
+        agenda_data = libtodotxt.readtodotxt(
+            os.path.join(self.testdir, "todo06.txt"))
+        libtodotxt.add_threshold_to_empty(agenda_data, now)
+        actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 10)
+        expected = [1, 2, 3, 4]
+        self.assertItemsEqual(expected, actual)
 
 if __name__ == '__main__':
     unittest.main()
