@@ -344,6 +344,9 @@ class TestMoveLines(unittest.TestCase):
         '''Simple move, non empty files'''
         self.start_testcase("03")
 
+    def test_04(self):
+        '''Empty lines'''
+        self.start_testcase("04")
 
 if __name__ == '__main__':
     unittest.main()
