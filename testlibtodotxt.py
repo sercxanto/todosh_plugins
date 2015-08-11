@@ -306,11 +306,10 @@ class TestMoveLines(unittest.TestCase):
             for line in file_:
                 line_nrs.append(int(line))
 
-        from_filename = os.path.join(temp_dir, "from.txt")
-        to_filename = os.path.join(temp_dir, "to.txt")
-
         # Run with preserve flag, leaving empty lines
         temp_dir = tempfile.mkdtemp(prefix="tmp_testlibtodotxt")
+        from_filename = os.path.join(temp_dir, "from.txt")
+        to_filename = os.path.join(temp_dir, "to.txt")
         shutil.copyfile(from_before_filename, from_filename)
         shutil.copyfile(to_before_filename, to_filename)
         libtodotxt.move_lines(from_filename, to_filename, line_nrs, True)
@@ -322,6 +321,8 @@ class TestMoveLines(unittest.TestCase):
 
         # Runs without preserving line numbers, compact file
         temp_dir = tempfile.mkdtemp(prefix="tmp_testlibtodotxt")
+        from_filename = os.path.join(temp_dir, "from.txt")
+        to_filename = os.path.join(temp_dir, "to.txt")
         shutil.copyfile(from_before_filename, from_filename)
         shutil.copyfile(to_before_filename, to_filename)
         libtodotxt.move_lines(from_filename, to_filename, line_nrs, False)
@@ -333,7 +334,7 @@ class TestMoveLines(unittest.TestCase):
 
     def test_01(self):
         '''Simple move'''
-        #self.start_testcase("01")
+        self.start_testcase("01")
 
 
 if __name__ == '__main__':

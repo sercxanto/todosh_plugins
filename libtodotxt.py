@@ -1,17 +1,38 @@
 
 import datetime
+import os
 import re
+import tempfile
 
-
-def move_lines(from_file, to_file, line_nrs, preserve_line_nrs):
+def move_lines(from_filename, to_filename, line_nrs, preserve_line_nrs):
     '''
     Copies the lines referenced in the list line_nrs from from_file to
     to_file and deletes empty lines in from_file
     If preserve_line_nrs is set to True, then the moved lines in from_file
     are replaced by empty lines. If preserve_line_nrs is set to False they are
     removed completely, so the line numbers are changing.'''
-    # TODO implement
-    pass
+
+    new_from_file = tempfile.NamedTemporaryFile(mode="a",
+            dir=os.path.dirname(from_filename), delete=False)
+    new_from_filename = new_from_file.name
+
+    from_file = open(from_filename, "r")
+    to_file = open(to_filename, "a")
+
+    for line_nr, line in enumerate(from_file, start=1):
+        if line_nr in line_nrs:
+            if preserve_line_nrs:
+                new_from_file.write("\n")
+            to_file.write(line)
+        else:
+            new_from_file.write(line)
+    to_file.close()
+    from_file.close()
+    new_from_file.close()
+
+    os.remove(from_filename)
+    os.rename(new_from_filename, from_filename)
+
 
 
 def add_threshold_to_empty(agenda_data, threshold):
