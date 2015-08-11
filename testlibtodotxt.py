@@ -1,4 +1,31 @@
 #!/usr/bin/env python
+# vim: set fileencoding=utf-8 :
+"""
+    testlibtodotxt.py
+
+    Unittests for libtodotxt.py, can be run by ./testlibtodo.py
+"""
+# The MIT License (MIT)
+#
+# Copyright (c) 2015 Georg Lutz <georg@georglutz.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 import datetime
 import filecmp
@@ -9,7 +36,7 @@ import tempfile
 import libtodotxt
 
 
-def checkAgendaDataEqual(dict1, dict2):
+def check_agenda_data_equal(dict1, dict2):
     '''Tests if two agenda dicts contains the same entries, independend of the
     order.
     Returns True if dicts are equal, False otherwise
@@ -33,9 +60,10 @@ def checkAgendaDataEqual(dict1, dict2):
 
 
 class TestReadTodoTxt(unittest.TestCase):
+    '''unit tests for function readtodotxt()'''
     def setUp(self):
-        scriptDir = os.path.dirname(__file__)
-        self.testdir = os.path.join(scriptDir, "testfiles")
+        script_dir = os.path.dirname(__file__)
+        self.testdir = os.path.join(script_dir, "testfiles")
 
     def test_01(self):
         '''Simple todo.txt'''
@@ -47,7 +75,7 @@ class TestReadTodoTxt(unittest.TestCase):
             { "line": "Task3", "nr": 3},
             { "line": "Task2", "nr": 2 },
             { "line": "Task4", "nr": 5 }]}
-        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(check_agenda_data_equal(agenda_data, expected))
 
     def test_02(self):
         '''Simple todo.txt with one "t:"'''
@@ -61,7 +89,7 @@ class TestReadTodoTxt(unittest.TestCase):
                     { "line": "Task4", "nr": 5 }],
                 datetime.date(2015,01,01): [
                     { "line": "Task2 t:2015-01-01", "nr": 2 } ]}
-        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(check_agenda_data_equal(agenda_data, expected))
 
     def test_03(self):
         '''Simple todo.txt with two "t:", one in the past'''
@@ -77,12 +105,10 @@ class TestReadTodoTxt(unittest.TestCase):
                         { "line": "Task2 t:2015-01-01", "nr": 2 } ],
                     datetime.date(2014,12,31): [
                         {"line": "Task5 t:2014-12-31", "nr": 7}]}
-        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(check_agenda_data_equal(agenda_data, expected))
 
     def test_04(self):
         '''Date which cannot be parsed'''
-        now = datetime.date(2015,01,01)
-        earlier = datetime.date(2014,12,31)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo04.txt"))
         expected = {
@@ -95,17 +121,18 @@ class TestReadTodoTxt(unittest.TestCase):
                         { "line": "Task2 t:2015-01-01", "nr": 2 } ],
                     datetime.date(2014,12,31): [
                         {"line": "Task5 t:2014-12-31", "nr": 7}]}
-        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(check_agenda_data_equal(agenda_data, expected))
 
 
 class TestAddThresholdToEmpty(unittest.TestCase):
+    '''unittests for function add_threshold_to_empty()'''
     def setUp(self):
-        scriptDir = os.path.dirname(__file__)
-        self.testdir = os.path.join(scriptDir, "testfiles")
+        script_dir = os.path.dirname(__file__)
+        self.testdir = os.path.join(script_dir, "testfiles")
 
     def test_01(self):
         '''Simple todo.txt'''
-        now = datetime.date(2015,01,01)
+        now = datetime.date(2015, 01, 01)
         agenda_data = libtodotxt.readtodotxt(
 
         os.path.join(self.testdir, "todo01.txt"))
@@ -116,11 +143,11 @@ class TestAddThresholdToEmpty(unittest.TestCase):
                         { "line": "Task3", "nr": 3 },
                         { "line": "Task2", "nr": 2 },
                         { "line": "Task4", "nr": 5 }]}
-        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(check_agenda_data_equal(agenda_data, expected))
 
     def test_02(self):
         '''Simple todo.txt with one "t:"'''
-        now = datetime.date(2015,01,01)
+        now = datetime.date(2015, 01, 01)
         agenda_data = libtodotxt.readtodotxt(
 
         os.path.join(self.testdir, "todo02.txt"))
@@ -131,12 +158,12 @@ class TestAddThresholdToEmpty(unittest.TestCase):
                         { "line": "Task3", "nr": 3},
                         { "line": "Task2 t:2015-01-01", "nr": 2 },
                         { "line": "Task4", "nr": 5 }]}
-        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(check_agenda_data_equal(agenda_data, expected))
 
     def test_03(self):
         '''Simple todo.txt with two "t:", one in the past'''
-        now = datetime.date(2015,01,01)
-        earlier = datetime.date(2014,12,31)
+        now = datetime.date(2015, 01, 01)
+        earlier = datetime.date(2014, 12, 31)
         agenda_data = libtodotxt.readtodotxt(
 
         os.path.join(self.testdir, "todo03.txt"))
@@ -149,12 +176,12 @@ class TestAddThresholdToEmpty(unittest.TestCase):
                     { "line": "Task3", "nr": 3},
                     { "line": "Task2 t:2015-01-01", "nr": 2 },
                     { "line": "Task4", "nr": 5 }]}
-        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(check_agenda_data_equal(agenda_data, expected))
 
     def test_04(self):
         '''Date which cannot be parsed'''
-        now = datetime.date(2015,01,01)
-        earlier = datetime.date(2014,12,31)
+        now = datetime.date(2015, 01, 01)
+        earlier = datetime.date(2014, 12, 31)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo04.txt"))
         libtodotxt.add_threshold_to_empty(agenda_data, now)
@@ -167,17 +194,18 @@ class TestAddThresholdToEmpty(unittest.TestCase):
                     { "line": "Task2 t:2015-01-01", "nr": 2 },
                     { "line": "Task4 t:abc", "nr": 5 },
                     {"line": "Task6 t:", "nr": 9}]}
-        self.assertTrue(checkAgendaDataEqual(agenda_data, expected))
+        self.assertTrue(check_agenda_data_equal(agenda_data, expected))
 
 
 class TestGetThresholdLineNr(unittest.TestCase):
+    '''unit tests for function get_threshold_line_nr()'''
     def setUp(self):
-        scriptDir = os.path.dirname(__file__)
-        self.testdir = os.path.join(scriptDir, "testfiles")
+        script_dir = os.path.dirname(__file__)
+        self.testdir = os.path.join(script_dir, "testfiles")
 
     def test_01(self):
         '''nr_of_day=1'''
-        now = datetime.date(2014,12,31)
+        now = datetime.date(2014, 12, 31)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo05.txt"))
         actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 1)
@@ -186,7 +214,7 @@ class TestGetThresholdLineNr(unittest.TestCase):
 
     def test_02(self):
         '''nr_of_day=2'''
-        now = datetime.date(2014,12,31)
+        now = datetime.date(2014, 12, 31)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo05.txt"))
         actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 2)
@@ -195,7 +223,7 @@ class TestGetThresholdLineNr(unittest.TestCase):
 
     def test_03(self):
         '''nr_of_day=3'''
-        now = datetime.date(2014,12,31)
+        now = datetime.date(2014, 12, 31)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo05.txt"))
         actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 3)
@@ -204,7 +232,7 @@ class TestGetThresholdLineNr(unittest.TestCase):
 
     def test_04(self):
         '''threshold in future'''
-        now = datetime.date(2014,12,28)
+        now = datetime.date(2014, 12, 28)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo05.txt"))
         actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 1)
@@ -212,7 +240,7 @@ class TestGetThresholdLineNr(unittest.TestCase):
 
     def test_05(self):
         '''another now date, 1 matches'''
-        now = datetime.date(2014,12,29)
+        now = datetime.date(2014, 12, 29)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo05.txt"))
         actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 2)
@@ -221,7 +249,7 @@ class TestGetThresholdLineNr(unittest.TestCase):
 
     def test_06(self):
         '''date in between threshold entries'''
-        now = datetime.date(2015,01,02)
+        now = datetime.date(2015, 01, 02)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo05.txt"))
         actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 10)
@@ -230,7 +258,7 @@ class TestGetThresholdLineNr(unittest.TestCase):
 
     def test_07(self):
         '''date at end of threshold entries'''
-        now = datetime.date(2015,01,03)
+        now = datetime.date(2015, 01, 03)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo05.txt"))
         actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 10)
@@ -239,7 +267,7 @@ class TestGetThresholdLineNr(unittest.TestCase):
 
     def test_08(self):
         '''date in future'''
-        now = datetime.date(2015,01,15)
+        now = datetime.date(2015, 01, 15)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo05.txt"))
         actual = libtodotxt.get_threshold_line_nr(agenda_data, now, 10)
@@ -248,7 +276,7 @@ class TestGetThresholdLineNr(unittest.TestCase):
 
     def test_09(self):
         '''Ommited threshold'''
-        now = datetime.date(2015,01,01)
+        now = datetime.date(2015, 01, 01)
         agenda_data = libtodotxt.readtodotxt(
             os.path.join(self.testdir, "todo06.txt"))
         libtodotxt.add_threshold_to_empty(agenda_data, now)
@@ -258,11 +286,12 @@ class TestGetThresholdLineNr(unittest.TestCase):
 
 
 class TestMoveLines(unittest.TestCase):
+    '''unit tests for function move_lines()'''
     def setUp(self):
-        scriptDir = os.path.dirname(__file__)
-        self.testdir = os.path.join(scriptDir, "testfiles")
+        script_dir = os.path.dirname(__file__)
+        self.testdir = os.path.join(script_dir, "testfiles")
 
-    def startTestcase(self, testcase):
+    def start_testcase(self, testcase):
         '''Runs a testcase from the folder testfile/move_lines'''
         dirname = os.path.join(self.testdir, "move_lines", testcase)
         lines_filename = os.path.join(dirname, "lines.txt")
@@ -294,7 +323,7 @@ class TestMoveLines(unittest.TestCase):
 
     def test_01(self):
         '''Simple move'''
-        #self.startTestcase("01")
+        #self.start_testcase("01")
 
 
 if __name__ == '__main__':
