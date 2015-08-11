@@ -3,10 +3,13 @@ import datetime
 import re
 
 
-def move_lines(from_file, to_file, line_nrs):
+def move_lines(from_file, to_file, line_nrs, preserve_line_nrs):
     '''
     Copies the lines referenced in the list line_nrs from from_file to
-    to_file and deletes empty lines in from_file'''
+    to_file and deletes empty lines in from_file
+    If preserve_line_nrs is set to True, then the moved lines in from_file
+    are replaced by empty lines. If preserve_line_nrs is set to False they are
+    removed completely, so the line numbers are changing.'''
     # TODO implement
     pass
 

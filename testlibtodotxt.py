@@ -297,6 +297,7 @@ class TestMoveLines(unittest.TestCase):
         lines_filename = os.path.join(dirname, "lines.txt")
         from_before_filename = os.path.join(dirname, "from_before.txt")
         from_after_filename = os.path.join(dirname, "from_after.txt")
+        from_after_preserve_filename = os.path.join(dirname, "from_after_preserve.txt")
         to_before_filename = os.path.join(dirname, "to_before.txt")
         to_after_filename = os.path.join(dirname, "to_after.txt")
 
@@ -304,21 +305,30 @@ class TestMoveLines(unittest.TestCase):
         with open(lines_filename) as file_:
             for line in file_:
                 line_nrs.append(int(line))
-    
-        temp_dir = tempfile.mkdtemp(prefix="tmp_testlibtodotxt")
-        print temp_dir
 
         from_filename = os.path.join(temp_dir, "from.txt")
         to_filename = os.path.join(temp_dir, "to.txt")
+
+        # Run with preserve flag, leaving empty lines
+        temp_dir = tempfile.mkdtemp(prefix="tmp_testlibtodotxt")
         shutil.copyfile(from_before_filename, from_filename)
         shutil.copyfile(to_before_filename, to_filename)
+        libtodotxt.move_lines(from_filename, to_filename, line_nrs, True)
+        self.assertTrue(filecmp.cmp(
+            from_filename, from_after_preserve_filename, shallow=False))
+        self.assertTrue(filecmp.cmp(
+            to_filename, to_after_filename, shallow=False))
+        shutil.rmtree(temp_dir)
 
-        libtodotxt.move_lines(from_filename, to_filename, line_nrs)
+        # Runs without preserving line numbers, compact file
+        temp_dir = tempfile.mkdtemp(prefix="tmp_testlibtodotxt")
+        shutil.copyfile(from_before_filename, from_filename)
+        shutil.copyfile(to_before_filename, to_filename)
+        libtodotxt.move_lines(from_filename, to_filename, line_nrs, False)
         self.assertTrue(filecmp.cmp(
             from_filename, from_after_filename, shallow=False))
         self.assertTrue(filecmp.cmp(
             to_filename, to_after_filename, shallow=False))
-
         shutil.rmtree(temp_dir)
 
     def test_01(self):
