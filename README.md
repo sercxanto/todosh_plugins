@@ -11,13 +11,13 @@ The format for recur.txt is roughly the same as described in
 [todopy](https://github.com/bram85/topydo/wiki/Recurrence) and
 [simpletask](https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/assets/index.en.md#extensions):
 
-    Task t:2015-01-01 recur:1y
+    Task t:2015-01-01 rec:1y
 
 
 Implementation details:
 
 * Only threshold/start date ("t:") is considered
-* When adding to todo.txt the recur tag "recur:" is ommited to not confuse
+* When adding to todo.txt the rec key "rec:" is ommited to not confuse
   software supporting it.
 * The current threshold date is the one in todo.txt.
 * The next threshold date is the one in recur.txt . When adding

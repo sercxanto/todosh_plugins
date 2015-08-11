@@ -4,10 +4,57 @@ import os
 import re
 import tempfile
 
+
+def get_key(line, key):
+    '''
+    Returns a value referenced by key from a todo line.
+    Returns None if key is not found
+    '''
+    return None
+
+
+def set_key(line, key, value):
+    '''
+    Sets a key to a value. The line is changed. If value is None, the key is
+    deleted completely.
+    '''
+    pass
+
+
+def add_recur(from_filename, to_filename, line_nrs):
+    '''
+    Adds recurring tasks referenced in the list line_nrs from from_filename to
+    to_filename.
+    In to_filename the "rec:" tag is stripped, in from_filename the "t:"
+    tag is changed to the date of the next recurrence.
+    '''
+    new_from_file = tempfile.NamedTemporaryFile(mode="a",
+            dir=os.path.dirname(from_filename), delete=False)
+    new_from_filename = new_from_file.name
+
+    from_file = open(from_filename, "r")
+    to_file = open(to_filename, "a")
+
+    for line_nr, line in enumerate(from_file, start=1):
+        if line_nr in line_nrs:
+            to_file.write(setkey(line, "rec", None))
+            new_threshold = calc_new_threshold(
+                    get_key(line, "t"), get_key(line, "rec"))
+            new_from_file.write(set_key(line, "t", new_threshold))
+        else:
+            new_from_file.write(line)
+    to_file.close()
+    from_file.close()
+    new_from_file.close()
+
+    os.remove(from_filename)
+    os.rename(new_from_filename, from_filename)
+
+
 def move_lines(from_filename, to_filename, line_nrs, preserve_line_nrs):
     '''
-    Copies the lines referenced in the list line_nrs from from_file to
-    to_file and deletes empty lines in from_file
+    Copies the lines referenced in the list line_nrs from from_filename to
+    to_filename and deletes empty lines in from_filename
     If preserve_line_nrs is set to True, then the moved lines in from_file
     are replaced by empty lines. If preserve_line_nrs is set to False they are
     removed completely, so the line numbers are changing.'''

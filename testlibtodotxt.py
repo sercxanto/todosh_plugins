@@ -348,6 +348,26 @@ class TestMoveLines(unittest.TestCase):
         '''Empty lines'''
         self.start_testcase("04")
 
+class TestGetKey(unittest.TestCase):
+    '''unit tests for the function get_key()'''
+
+    def test_01(self):
+        '''Empty line'''
+        line = ""
+        actual = libtodotxt.get_key(line, "t")
+        expected = None
+        self.assertEqual(expected, actual)
+
+    def test_02(self):
+        '''Non-existing key'''
+        line = "abcdefgh"
+        actual = libtodotxt.get_key(line, "t")
+        expected = None
+        self.assertEqual(expected, actual)
+
+
+
+
 if __name__ == '__main__':
     unittest.main()
 

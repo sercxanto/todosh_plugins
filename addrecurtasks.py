@@ -65,6 +65,11 @@ def plugin(args):
     now = datetime.date.today()
     agenda_data = libtodotxt.readtodotxt(recur_filename)
 
+    line_nrs = libtodotxt.get_threshold_line_nr(agenda_data, now, 10)
+
+
+    print(line_nrs)
+
 
 
 def main():
