@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# Simple shell wrapper script
+#
+# Mainly to avoid having a plugin name with ".py" extension
+
+PYTHON_SCRIPT=$(dirname $0)/$(basename $0).py
+/usr/bin/env python $PYTHON_SCRIPT $@
+
