@@ -336,6 +336,9 @@ class TestMoveLines(unittest.TestCase):
         '''Simple move'''
         self.start_testcase("01")
 
+    def test_02(self):
+        '''Empty from file'''
+        self.start_testcase("02")
 
 if __name__ == '__main__':
     unittest.main()
