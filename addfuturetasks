@@ -4,6 +4,6 @@
 #
 # Mainly to avoid having a plugin name with ".py" extension
 
-PYTHON_SCRIPT=$(dirname $0)/addfuturetasks.py
+PYTHON_SCRIPT=$(dirname $0)/$(basename $0).py
 /usr/bin/env python $PYTHON_SCRIPT $@
 
