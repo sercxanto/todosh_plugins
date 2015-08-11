@@ -333,12 +333,17 @@ class TestMoveLines(unittest.TestCase):
         shutil.rmtree(temp_dir)
 
     def test_01(self):
-        '''Simple move'''
+        '''Empty to file'''
         self.start_testcase("01")
 
     def test_02(self):
         '''Empty from file'''
         self.start_testcase("02")
+
+    def test_03(self):
+        '''Simple move, non empty files'''
+        self.start_testcase("03")
+
 
 if __name__ == '__main__':
     unittest.main()
