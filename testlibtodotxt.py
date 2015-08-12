@@ -515,6 +515,38 @@ class TestAddIntervalSetKey(unittest.TestCase):
         self.assertEqual(expected, actual)
 
 
+class TestAddRecur(unittest.TestCase):
+    '''unit tests for the function add_recur()'''
+
+    def setUp(self):
+        script_dir = os.path.dirname(__file__)
+        self.testdir = os.path.join(script_dir, "testfiles")
+
+    def start_testcase(self, testcase, max_threshold):
+        '''Runs a testcase from the folder testfiles/add_recur'''
+        dirname = os.path.join(self.testdir, "add_recur", testcase)
+        from_before_filename = os.path.join(dirname, "from_before.txt")
+        from_after_filename = os.path.join(dirname, "from_after.txt")
+        to_before_filename = os.path.join(dirname, "to_before.txt")
+        to_after_filename = os.path.join(dirname, "to_after.txt")
+
+        temp_dir = tempfile.mkdtemp(prefix="tmp_testlibtodotxt")
+        from_filename = os.path.join(temp_dir, "from.txt")
+        to_filename = os.path.join(temp_dir, "to.txt")
+        shutil.copyfile(from_before_filename, from_filename)
+        shutil.copyfile(to_before_filename, to_filename)
+        libtodotxt.add_recur(from_filename, to_filename, max_threshold)
+        self.assertTrue(filecmp.cmp(
+            from_filename, from_after_filename, shallow=False))
+        self.assertTrue(filecmp.cmp(
+            to_filename, to_after_filename, shallow=False))
+        shutil.rmtree(temp_dir)
+
+    def test_01(self):
+        '''empty files'''
+        self.start_testcase("01", "2015-01-01")
+
+
 if __name__ == '__main__':
     unittest.main()
 
