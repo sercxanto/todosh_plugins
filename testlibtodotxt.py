@@ -454,6 +454,67 @@ class TestSetKey(unittest.TestCase):
         expected = "blah key:value2 y:value3"
         self.assertEqual(expected, actual)
 
+
+class TestAddIntervalSetKey(unittest.TestCase):
+    '''unit tests for the function add_interval()'''
+
+    def test_01(self):
+        '''One year'''
+        start = "2015-01-01"
+        interval = "1y"
+        actual = libtodotxt.add_interval(start, interval)
+        expected = "2016-01-01"
+        self.assertEqual(expected, actual)
+
+    def test_02(self):
+        '''One month 1/2'''
+        start = "2015-03-01"
+        interval = "1m"
+        actual = libtodotxt.add_interval(start, interval)
+        expected = "2015-03-31"
+        self.assertEqual(expected, actual)
+
+    def test_03(self):
+        '''One month 2/2'''
+        start = "2015-04-01"
+        interval = "1m"
+        actual = libtodotxt.add_interval(start, interval)
+        expected = "2015-05-01"
+        self.assertEqual(expected, actual)
+
+    def test_04(self):
+        '''One day 1/2'''
+        start = "2016-04-01"
+        interval = "1d"
+        actual = libtodotxt.add_interval(start, interval)
+        expected = "2016-04-02"
+        self.assertEqual(expected, actual)
+
+    def test_05(self):
+        '''One day 2/2'''
+        start = "2016-06-30"
+        interval = "1d"
+        actual = libtodotxt.add_interval(start, interval)
+        expected = "2016-07-01"
+        self.assertEqual(expected, actual)
+
+    def test_06(self):
+        '''Two month'''
+        start = "2015-03-02"
+        interval = "3m"
+        actual = libtodotxt.add_interval(start, interval)
+        expected = "2015-05-31"
+        self.assertEqual(expected, actual)
+
+    def test_07(self):
+        '''7 days'''
+        start = "2014-12-31"
+        interval = "7d"
+        actual = libtodotxt.add_interval(start, interval)
+        expected = "2015-01-07"
+        self.assertEqual(expected, actual)
+
+
 if __name__ == '__main__':
     unittest.main()
 

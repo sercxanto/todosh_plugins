@@ -41,6 +41,44 @@ def set_key(line, key, value):
     return new_line
 
 
+def add_interval(date_str, interval):
+    '''
+    Adds an interval to an iso8601 date and returns the result
+
+    Parameters:
+
+    - date: date string in ISO8601 format: "2015-01-01"
+    - interval: textual representation of an time interval: number + qualifier,
+    e.g. "1y". Valid qualifiers are
+        - "y": year
+        - "m": month
+        - "d": day
+    '''
+    date = datetime.datetime.strptime(date_str, "%Y-%m-%d")
+    pattern = "(?P<nr>\d+)(?P<qual>[ymd])"
+    result = re.search(pattern, interval)
+
+    if result is None:
+        return None
+
+    nr = int(result.group("nr"))
+    qual = result.group("qual")
+
+    delta = None
+    nr_days = 0
+
+    if qual == "y":
+        nr_days = nr * 365
+    elif qual == "m":
+        nr_days = nr * 30
+    elif qual == "d":
+        nr_days = nr
+    delta = datetime.timedelta(days = nr_days)
+
+    final_date = date + delta
+    return final_date.strftime("%Y-%m-%d")
+
+
 def add_recur(from_filename, to_filename, max_threshold):
     '''
     Adds recurring tasks from from_filename to to_filename.
@@ -63,7 +101,7 @@ def add_recur(from_filename, to_filename, max_threshold):
     for line in from_file:
         rec = get_key(line, "rec")
         threshold = get_key(line, "t")
-        new_threshold = threshold
+        new_threshold = threshold # to be recorded in from_file
         if rec != None and threshold != None:
             # string comparison, works with ISO8601
             while threshold <= max_threshold:
