@@ -8,7 +8,7 @@ todo.txt stays small and can be used with software not supporting the recur
 format.
 
 The format for recur.txt is roughly the same as described in
-[todopy](https://github.com/bram85/topydo/wiki/Recurrence) and
+[topydo](https://github.com/bram85/topydo/wiki/Recurrence) and
 [simpletask](https://github.com/mpcjanssen/simpletask-android/blob/master/src/main/assets/index.en.md#extensions):
 
     Task t:2015-01-01 rec:1y
