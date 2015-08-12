@@ -7,16 +7,21 @@ import tempfile
 
 def get_key(line, key):
     '''
-    Returns a value referenced by key from a todo line.
+    Returns a value referenced by key from a todo line (first occurence).
     Returns None if key is not found
     '''
+    # pattern = "(?P<key>[^:]+):(?P<value>\\S+)"
+    pattern = key + ":" + "(?P<value>\\S+)"
+    result = re.search(pattern, line)
+    if result != None:
+        return result.group("value")
     return None
 
 
 def set_key(line, key, value):
     '''
-    Sets a key to a value. The line is changed. If value is None, the key is
-    deleted completely.
+    Sets or adds (if not existent) a key inside the line to a value. If value
+    is None, the key is deleted completely.
     '''
     pass
 

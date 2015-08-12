@@ -354,19 +354,37 @@ class TestGetKey(unittest.TestCase):
     def test_01(self):
         '''Empty line'''
         line = ""
-        actual = libtodotxt.get_key(line, "t")
+        actual = libtodotxt.get_key(line, "k")
         expected = None
         self.assertEqual(expected, actual)
 
     def test_02(self):
         '''Non-existing key'''
         line = "abcdefgh"
-        actual = libtodotxt.get_key(line, "t")
+        actual = libtodotxt.get_key(line, "k")
         expected = None
         self.assertEqual(expected, actual)
 
+    def test_03(self):
+        '''Existing key at end'''
+        line = "blah k:abcdef"
+        actual = libtodotxt.get_key(line, "k")
+        expected = "abcdef"
+        self.assertEqual(expected, actual)
 
+    def test_04(self):
+        '''Existing key, followed by content'''
+        line = "blah k:abcdef blub"
+        actual = libtodotxt.get_key(line, "k")
+        expected = "abcdef"
+        self.assertEqual(expected, actual)
 
+    def test_05(self):
+        '''Existing key, followed by second key'''
+        line = "blah k:abcdef k2:blub"
+        actual = libtodotxt.get_key(line, "k")
+        expected = "abcdef"
+        self.assertEqual(expected, actual)
 
 if __name__ == '__main__':
     unittest.main()
