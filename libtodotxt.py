@@ -41,12 +41,17 @@ def set_key(line, key, value):
     return new_line
 
 
-def add_recur(from_filename, to_filename, line_nrs):
+def add_recur(from_filename, to_filename, max_threshold):
     '''
-    Adds recurring tasks referenced in the list line_nrs from from_filename to
-    to_filename.
+    Adds recurring tasks from from_filename to to_filename.
+    A single repeating task may be added several times, depending on how many
+    intervals fit in the timeframe until max_threshold is reached.
     In to_filename the "rec:" tag is stripped, in from_filename the "t:"
-    tag is changed to the date of the next recurrence.
+    tag is changed to the date of the next recurrence (the first one later then
+    max_threshold).
+
+    Parameters:
+        - max_threshold: maximum threshold date in ISO 8601 text format
     '''
     new_from_file = tempfile.NamedTemporaryFile(mode="a",
             dir=os.path.dirname(from_filename), delete=False)
@@ -55,14 +60,21 @@ def add_recur(from_filename, to_filename, line_nrs):
     from_file = open(from_filename, "r")
     to_file = open(to_filename, "a")
 
-    for line_nr, line in enumerate(from_file, start=1):
-        if line_nr in line_nrs:
-            to_file.write(setkey(line, "rec", None))
-            new_threshold = calc_new_threshold(
-                    get_key(line, "t"), get_key(line, "rec"))
-            new_from_file.write(set_key(line, "t", new_threshold))
-        else:
-            new_from_file.write(line)
+    for line in from_file:
+        rec = get_key(line, "rec")
+        threshold = get_key(line, "t")
+        new_threshold = threshold
+        if rec != None and threshold != None:
+            # string comparison, works with ISO8601
+            while threshold <= max_threshold:
+                line_to_file = set_key(line, "rec", None)
+                line_to_file = set_key(line_to_file, "t", threshold)
+                to_file.write(line_to_file)
+                new_threshold = threshold
+                threshold = add_interval(new_threshold, rec)
+        line_from_file = set_key(line, "t", new_threshold)
+        new_from_file.write(line_from_file)
+
     to_file.close()
     from_file.close()
     new_from_file.close()
