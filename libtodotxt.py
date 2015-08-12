@@ -5,13 +5,17 @@ import re
 import tempfile
 
 
+def get_key_search_pattern(key):
+    '''Returns the re search pattern for a given key'''
+    return "(^|(?P<spaces>\s))" + key + ":" + "(?P<value>\\S+)"
+
+
 def get_key(line, key):
     '''
     Returns a value referenced by key from a todo line (first occurence).
     Returns None if key is not found
     '''
-    # pattern = "(?P<key>[^:]+):(?P<value>\\S+)"
-    pattern = key + ":" + "(?P<value>\\S+)"
+    pattern = get_key_search_pattern(key)
     result = re.search(pattern, line)
     if result != None:
         return result.group("value")
@@ -22,8 +26,19 @@ def set_key(line, key, value):
     '''
     Sets or adds (if not existent) a key inside the line to a value. If value
     is None, the key is deleted completely.
+    Returns the changed line.
     '''
-    pass
+    search_pattern = get_key_search_pattern(key)
+    replace_pattern = ""
+    if value is not None:
+        replace_pattern = "\\g<spaces>" + key + ":" + value
+
+    (new_line, number_of_subs_made) = re.subn(search_pattern, replace_pattern, line)
+    if number_of_subs_made == 0 and value is not None:
+        if len(line) > 0:
+            new_line = line + " "
+        new_line = new_line + key + ":" + value
+    return new_line
 
 
 def add_recur(from_filename, to_filename, line_nrs):

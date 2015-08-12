@@ -348,6 +348,7 @@ class TestMoveLines(unittest.TestCase):
         '''Empty lines'''
         self.start_testcase("04")
 
+
 class TestGetKey(unittest.TestCase):
     '''unit tests for the function get_key()'''
 
@@ -384,6 +385,73 @@ class TestGetKey(unittest.TestCase):
         line = "blah k:abcdef k2:blub"
         actual = libtodotxt.get_key(line, "k")
         expected = "abcdef"
+        self.assertEqual(expected, actual)
+
+    def test_06(self):
+        '''Two keys, one is substring of another'''
+        line = "blah key:value2 y:value1"
+        actual = libtodotxt.get_key(line, "y")
+        expected = "value1"
+        self.assertEqual(expected, actual)
+
+
+class TestSetKey(unittest.TestCase):
+    '''unit tests for the function set_key()'''
+
+    def test_01(self):
+        '''Empty line, delete key'''
+        line = ""
+        actual = libtodotxt.set_key(line, "k", None)
+        expected = ""
+        self.assertEqual(expected, actual)
+
+    def test_02(self):
+        '''Empty line, set a key'''
+        line = ""
+        actual = libtodotxt.set_key(line, "key", "avalue")
+        expected = "key:avalue"
+        self.assertEqual(expected, actual)
+
+    def test_03(self):
+        '''Non empty line, set a new key'''
+        line = "abctest"
+        actual = libtodotxt.set_key(line, "key", "avalue")
+        expected = "abctest key:avalue"
+        self.assertEqual(expected, actual)
+
+    def test_04(self):
+        '''Non empty line, set a new key, in addition to another key'''
+        line = "abctest otherkey:othervalue"
+        actual = libtodotxt.set_key(line, "key", "avalue")
+        expected = "abctest otherkey:othervalue key:avalue"
+        self.assertEqual(expected, actual)
+
+    def test_05(self):
+        '''Non empty line, set an existing key to a new value'''
+        line = "abctest key:othervalue testabc"
+        actual = libtodotxt.set_key(line, "key", "avalue")
+        expected = "abctest key:avalue testabc"
+        self.assertEqual(expected, actual)
+
+    def test_06(self):
+        '''Non empty line, delete an existing key'''
+        line = "abctest testabc key:othervalue AAA"
+        actual = libtodotxt.set_key(line, "key", None)
+        expected = "abctest testabc AAA"
+        self.assertEqual(expected, actual)
+
+    def test_07(self):
+        '''Non empty line, delete an existing key, leaving another one'''
+        line = "abctest testabc key:othervalue otherkey:othervalue AAA"
+        actual = libtodotxt.set_key(line, "key", None)
+        expected = "abctest testabc otherkey:othervalue AAA"
+        self.assertEqual(expected, actual)
+
+    def test_08(self):
+        '''Two keys, one is substring of another'''
+        line = "blah key:value2 y:value1"
+        actual = libtodotxt.set_key(line, "y", "value3")
+        expected = "blah key:value2 y:value3"
         self.assertEqual(expected, actual)
 
 if __name__ == '__main__':
