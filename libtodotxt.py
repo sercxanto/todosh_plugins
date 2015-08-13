@@ -1,3 +1,32 @@
+# vim: set fileencoding=utf-8 :
+"""
+    libtodotxt.py
+
+    Library with common functions to todo.txt addons
+
+    This is no complete implementation of the todo.txt format.
+"""
+# The MIT License (MIT)
+#
+# Copyright (c) 2015 Georg Lutz <georg@georglutz.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 import datetime
 import os
@@ -33,7 +62,8 @@ def set_key(line, key, value):
     if value is not None:
         replace_pattern = "\\g<spaces>" + key + ":" + value
 
-    (new_line, number_of_subs_made) = re.subn(search_pattern, replace_pattern, line)
+    (new_line, number_of_subs_made) = re.subn(
+            search_pattern, replace_pattern, line)
     if number_of_subs_made == 0 and value is not None:
         if len(line) > 0:
             new_line = line + " "
@@ -55,24 +85,24 @@ def add_interval(date_str, interval):
         - "d": day
     '''
     date = datetime.datetime.strptime(date_str, "%Y-%m-%d")
-    pattern = "(?P<nr>\d+)(?P<qual>[ymd])"
+    pattern = "(?P<number>\d+)(?P<qual>[ymd])"
     result = re.search(pattern, interval)
 
     if result is None:
         return None
 
-    nr = int(result.group("nr"))
+    number = int(result.group("number"))
     qual = result.group("qual")
 
     delta = None
     nr_days = 0
 
     if qual == "y":
-        nr_days = nr * 365
+        nr_days = number * 365
     elif qual == "m":
-        nr_days = nr * 30
+        nr_days = number * 30
     elif qual == "d":
-        nr_days = nr
+        nr_days = number
     delta = datetime.timedelta(days = nr_days)
 
     final_date = date + delta
