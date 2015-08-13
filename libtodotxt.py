@@ -131,16 +131,14 @@ def add_recur(from_filename, to_filename, max_threshold):
     for line in from_file:
         rec = get_key(line, "rec")
         threshold = get_key(line, "t")
-        new_threshold = threshold # to be recorded in from_file
         if rec != None and threshold != None:
             # string comparison, works with ISO8601
             while threshold <= max_threshold:
                 line_to_file = set_key(line, "rec", None)
                 line_to_file = set_key(line_to_file, "t", threshold)
                 to_file.write(line_to_file)
-                new_threshold = threshold
-                threshold = add_interval(new_threshold, rec)
-        line_from_file = set_key(line, "t", new_threshold)
+                threshold = add_interval(threshold, rec)
+        line_from_file = set_key(line, "t", threshold)
         new_from_file.write(line_from_file)
 
     to_file.close()

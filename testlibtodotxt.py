@@ -522,13 +522,18 @@ class TestAddRecur(unittest.TestCase):
         script_dir = os.path.dirname(__file__)
         self.testdir = os.path.join(script_dir, "testfiles")
 
-    def start_testcase(self, testcase, max_threshold):
+    def start_testcase(self, testcase):
         '''Runs a testcase from the folder testfiles/add_recur'''
         dirname = os.path.join(self.testdir, "add_recur", testcase)
         from_before_filename = os.path.join(dirname, "from_before.txt")
         from_after_filename = os.path.join(dirname, "from_after.txt")
         to_before_filename = os.path.join(dirname, "to_before.txt")
         to_after_filename = os.path.join(dirname, "to_after.txt")
+        max_threshold_filename = os.path.join(dirname, "max_threshold.txt")
+
+        max_threshold = ""
+        with open(max_threshold_filename) as file_:
+            max_threshold = file_.readline().strip()
 
         temp_dir = tempfile.mkdtemp(prefix="tmp_testlibtodotxt")
         from_filename = os.path.join(temp_dir, "from.txt")
@@ -544,8 +549,11 @@ class TestAddRecur(unittest.TestCase):
 
     def test_01(self):
         '''empty files'''
-        self.start_testcase("01", "2015-01-01")
+        self.start_testcase("01")
 
+    def test_02(self):
+        '''empty to file'''
+        self.start_testcase("02")
 
 if __name__ == '__main__':
     unittest.main()
