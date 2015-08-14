@@ -535,20 +535,34 @@ class TestAddRecur(unittest.TestCase):
         dirname = os.path.join(self.testdir, "add_recur", testcase)
         from_before_filename = os.path.join(dirname, "from_before.txt")
         from_after_filename = os.path.join(dirname, "from_after.txt")
+        from_new_filename = os.path.join(dirname, "from_new.txt")
         to_before_filename = os.path.join(dirname, "to_before.txt")
         to_after_filename = os.path.join(dirname, "to_after.txt")
+        to_new_filename = os.path.join(dirname, "to_new.txt")
         max_threshold_filename = os.path.join(dirname, "max_threshold.txt")
 
         max_threshold = ""
         with open(max_threshold_filename) as file_:
             max_threshold = file_.readline().strip()
 
+        from_new_expected = []
+        with open(from_new_filename) as file_:
+            for line in file_:
+                from_new_expected.append(line.strip())
+
+        to_new_expected = []
+        with open(to_new_filename) as file_:
+            for line in file_:
+                to_new_expected.append(line.strip())
+
         temp_dir = tempfile.mkdtemp(prefix="tmp_testlibtodotxt")
         from_filename = os.path.join(temp_dir, "from.txt")
         to_filename = os.path.join(temp_dir, "to.txt")
         shutil.copyfile(from_before_filename, from_filename)
         shutil.copyfile(to_before_filename, to_filename)
-        libtodotxt.add_recur(from_filename, to_filename, max_threshold)
+        new_lines = libtodotxt.add_recur(from_filename, to_filename, max_threshold)
+        self.assertEqual(new_lines["from"], from_new_expected)
+        self.assertEqual(new_lines["to"], to_new_expected)
         self.assertTrue(filecmp.cmp(
             from_filename, from_after_filename, shallow=False))
         self.assertTrue(filecmp.cmp(

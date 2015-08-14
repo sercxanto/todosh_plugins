@@ -118,12 +118,28 @@ def add_recur(from_filename, to_filename, max_threshold):
     A single repeating task may be added several times, depending on how many
     intervals fit in the timeframe until max_threshold is reached.
     In to_filename the "rec:" tag is stripped, in from_filename the "t:"
-    tag is changed to the date of the next recurrence (the first one later then
+    tag is changed to the date of the next recurrence (the first one later as
     max_threshold).
 
     Parameters:
         - max_threshold: maximum threshold date in ISO 8601 text format
+    Returns:
+        Dictionary with information with new/updated lines in to/from file, e.g.:
+        { "from": [
+            "Task1 t:2015-07-15 rec:2w",
+            "Task2 t:2015-07-22 rec:1m"
+            ],
+          "to": [
+            "Task1 t:2015-07-01",
+            "Task2 t:2015-06-22"
+            ]
+        }
     '''
+
+    result = {}
+    result["from"] = []
+    result["to"] = []
+
     new_from_file = tempfile.NamedTemporaryFile(mode="a",
             dir=os.path.dirname(from_filename), delete=False)
     new_from_filename = new_from_file.name
@@ -134,15 +150,19 @@ def add_recur(from_filename, to_filename, max_threshold):
     for line in from_file:
         rec = get_key(line, "rec")
         threshold = get_key(line, "t")
+        old_threshold = threshold
         if rec != None and threshold != None:
             # string comparison, works with ISO8601
             while threshold <= max_threshold:
                 line_to_file = set_key(line, "rec", None)
                 line_to_file = set_key(line_to_file, "t", threshold)
                 to_file.write(line_to_file)
+                result["to"].append(line_to_file.strip())
                 threshold = add_interval(threshold, rec)
         line_from_file = set_key(line, "t", threshold)
         new_from_file.write(line_from_file)
+        if old_threshold != threshold:
+            result["from"].append(line_from_file.strip())
 
     to_file.close()
     from_file.close()
@@ -150,6 +170,8 @@ def add_recur(from_filename, to_filename, max_threshold):
 
     os.remove(from_filename)
     os.rename(new_from_filename, from_filename)
+
+    return result
 
 
 def move_lines(from_filename, to_filename, line_nrs, preserve_line_nrs):

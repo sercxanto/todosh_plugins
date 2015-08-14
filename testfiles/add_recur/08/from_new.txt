@@ -1,0 +1,3 @@
+RecurTask1 t:2015-08-28 rec:6m
+RecurTask2 t:2015-03-16 rec:2w
+RecurTask3 t:2015-03-18 rec:7d
