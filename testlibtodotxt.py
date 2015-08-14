@@ -297,7 +297,8 @@ class TestMoveLines(unittest.TestCase):
         lines_filename = os.path.join(dirname, "lines.txt")
         from_before_filename = os.path.join(dirname, "from_before.txt")
         from_after_filename = os.path.join(dirname, "from_after.txt")
-        from_after_preserve_filename = os.path.join(dirname, "from_after_preserve.txt")
+        from_after_preserve_filename = os.path.join(
+                dirname, "from_after_preserve.txt")
         to_before_filename = os.path.join(dirname, "to_before.txt")
         to_after_filename = os.path.join(dirname, "to_after.txt")
 
@@ -561,7 +562,8 @@ class TestAddRecur(unittest.TestCase):
         shutil.copyfile(from_before_filename, from_filename)
         shutil.copyfile(to_before_filename, to_filename)
 
-        new_lines = libtodotxt.add_recur(from_filename, to_filename, max_threshold, True)
+        new_lines = libtodotxt.add_recur(
+                from_filename, to_filename, max_threshold, True)
         self.assertEqual(new_lines["from"], from_new_expected)
         self.assertEqual(new_lines["to"], to_new_expected)
         self.assertTrue(filecmp.cmp(
@@ -569,7 +571,8 @@ class TestAddRecur(unittest.TestCase):
         self.assertTrue(filecmp.cmp(
             to_filename, to_before_filename, shallow=False))
 
-        new_lines = libtodotxt.add_recur(from_filename, to_filename, max_threshold, False)
+        new_lines = libtodotxt.add_recur(
+                from_filename, to_filename, max_threshold, False)
         self.assertEqual(new_lines["from"], from_new_expected)
         self.assertEqual(new_lines["to"], to_new_expected)
         self.assertTrue(filecmp.cmp(

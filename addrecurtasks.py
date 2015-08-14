@@ -64,7 +64,8 @@ def plugin(args):
 
     now = datetime.date.today()
     max_threshold = (now + datetime.timedelta(days=10)).strftime("%Y-%m-%d")
-    new_lines = libtodotxt.add_recur(recur_filename, todo_filename, max_threshold, args.dryrun)
+    new_lines = libtodotxt.add_recur(
+            recur_filename, todo_filename, max_threshold, args.dryrun)
 
     if len(new_lines["to"]) > 0:
         print("Add the following new lines to todo.txt:")
