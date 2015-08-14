@@ -560,7 +560,7 @@ class TestAddRecur(unittest.TestCase):
         to_filename = os.path.join(temp_dir, "to.txt")
         shutil.copyfile(from_before_filename, from_filename)
         shutil.copyfile(to_before_filename, to_filename)
-        new_lines = libtodotxt.add_recur(from_filename, to_filename, max_threshold)
+        new_lines = libtodotxt.add_recur(from_filename, to_filename, max_threshold, False)
         self.assertEqual(new_lines["from"], from_new_expected)
         self.assertEqual(new_lines["to"], to_new_expected)
         self.assertTrue(filecmp.cmp(
