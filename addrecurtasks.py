@@ -63,13 +63,23 @@ def plugin(args):
         sys.exit(1)
 
     now = datetime.date.today()
-    agenda_data = libtodotxt.readtodotxt(recur_filename)
+    max_threshold = (now + datetime.timedelta(days=10)).strftime("%Y-%m-%d")
+    new_lines = libtodotxt.add_recur(recur_filename, todo_filename, max_threshold, args.dryrun)
 
-    line_nrs = libtodotxt.get_threshold_line_nr(agenda_data, now, 10)
+    if len(new_lines["to"]) > 0:
+        print("Add the following new lines to todo.txt:")
+        for line in new_lines["to"]:
+            print("  " + line)
+    else:
+        print("No new entries to add to todo.txt")
 
+    if len(new_lines["from"]) > 0:
+        print("Change the following lines in recur.txt:")
+        for line in new_lines["from"]:
+            print("  " + line)
 
-    print(line_nrs)
-
+    if args.dryrun:
+        print("Dryrun: Do not change files.")
 
 
 def main():

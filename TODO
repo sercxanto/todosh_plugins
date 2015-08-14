@@ -1,4 +1,3 @@
-* add --dryrun option to addrecurtasks
 * Add parameter to agenda view to define the number of days to look in future
 * Run pclint
 * Support different output formats (short, long, etc.)
