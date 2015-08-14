@@ -583,6 +583,11 @@ class TestAddRecur(unittest.TestCase):
         '''different tasks, same interval'''
         self.start_testcase("07")
 
+    def test_08(self):
+        '''more realistic example, 10 days threshold'''
+        self.start_testcase("08")
+
+
 if __name__ == '__main__':
     unittest.main()
 
