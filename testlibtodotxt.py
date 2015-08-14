@@ -579,6 +579,9 @@ class TestAddRecur(unittest.TestCase):
         '''two recurrences in timeframe'''
         self.start_testcase("06")
 
+    def test_07(self):
+        '''different tasks, same interval'''
+        self.start_testcase("07")
 
 if __name__ == '__main__':
     unittest.main()
