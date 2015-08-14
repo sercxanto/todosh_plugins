@@ -82,10 +82,11 @@ def add_interval(date_str, interval):
     e.g. "1y". Valid qualifiers are
         - "y": year
         - "m": month
+        - "w": week
         - "d": day
     '''
     date = datetime.datetime.strptime(date_str, "%Y-%m-%d")
-    pattern = "(?P<number>\d+)(?P<qual>[ymd])"
+    pattern = "(?P<number>\d+)(?P<qual>[ymwd])"
     result = re.search(pattern, interval)
 
     if result is None:
@@ -101,6 +102,8 @@ def add_interval(date_str, interval):
         nr_days = number * 365
     elif qual == "m":
         nr_days = number * 30
+    elif qual == "w":
+        nr_days = number * 7
     elif qual == "d":
         nr_days = number
     delta = datetime.timedelta(days = nr_days)

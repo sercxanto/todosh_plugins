@@ -1,0 +1,3 @@
+RecurTask1 t:2015-01-05 rec:2d
+RecurTask2 t:2015-01-04 rec:1y
+RecurTask3 t:2015-01-17 rec:2w

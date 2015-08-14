@@ -514,6 +514,14 @@ class TestAddIntervalSetKey(unittest.TestCase):
         expected = "2015-01-07"
         self.assertEqual(expected, actual)
 
+    def test_08(self):
+        '''2 weeks'''
+        start = "2015-01-03"
+        interval = "2w"
+        actual = libtodotxt.add_interval(start, interval)
+        expected = "2015-01-17"
+        self.assertEqual(expected, actual)
+
 
 class TestAddRecur(unittest.TestCase):
     '''unit tests for the function add_recur()'''
@@ -558,6 +566,19 @@ class TestAddRecur(unittest.TestCase):
     def test_03(self):
         '''non empty files'''
         self.start_testcase("03")
+
+    def test_04(self):
+        '''2 day recurrence'''
+        self.start_testcase("04")
+
+    def test_05(self):
+        '''recurrence, outside threshold'''
+        self.start_testcase("05")
+
+    def test_06(self):
+        '''two recurrences in timeframe'''
+        self.start_testcase("06")
+
 
 if __name__ == '__main__':
     unittest.main()
