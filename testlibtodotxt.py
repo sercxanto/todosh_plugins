@@ -555,6 +555,10 @@ class TestAddRecur(unittest.TestCase):
         '''empty to file'''
         self.start_testcase("02")
 
+    def test_03(self):
+        '''non empty files'''
+        self.start_testcase("03")
+
 if __name__ == '__main__':
     unittest.main()
 
