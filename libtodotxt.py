@@ -158,14 +158,14 @@ def add_recur(from_filename, to_filename, max_threshold, is_dryrun):
         if rec != None and threshold != None:
             # string comparison, works with ISO8601
             while threshold <= max_threshold:
+                line_to_file = set_key(line, "rec", None)
+                line_to_file = set_key(line_to_file, "t", threshold)
                 if not is_dryrun:
-                    line_to_file = set_key(line, "rec", None)
-                    line_to_file = set_key(line_to_file, "t", threshold)
                     to_file.write(line_to_file)
                 result["to"].append(line_to_file.strip())
                 threshold = add_interval(threshold, rec)
+        line_from_file = set_key(line, "t", threshold)
         if not is_dryrun:
-            line_from_file = set_key(line, "t", threshold)
             new_from_file.write(line_from_file)
         if old_threshold != threshold:
             result["from"].append(line_from_file.strip())
@@ -174,9 +174,8 @@ def add_recur(from_filename, to_filename, max_threshold, is_dryrun):
     if not is_dryrun:
         new_from_file.close()
         to_file.close()
-
-    os.remove(from_filename)
-    os.rename(new_from_filename, from_filename)
+        os.remove(from_filename)
+        os.rename(new_from_filename, from_filename)
 
     return result
 
