@@ -77,7 +77,7 @@ def plugin(args):
         for date in agenda_data:
             for entry in agenda_data[date]:
                 if entry["nr"] in lines_to_copy:
-                    print("%02d %s" % (entry["nr"], entry["line"]))
+                    print("  %02d %s" % (entry["nr"], entry["line"]))
         if args.dryrun:
             print("Dry run. Not changing files.")
         else:
